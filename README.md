@@ -13,3 +13,6 @@ Authors:
 - Marcin Kosiński kosinskim@student.mini.pw.edu.pl
 - Norbert Ryciak ryciakn@student.mini.pw.edu.pl
 - Wiktor Ryciuk ryciukw@student.mini.pw.edu.pl
+
+Website:
+http://marcinkosinski.github.io/AlmostBigData/
