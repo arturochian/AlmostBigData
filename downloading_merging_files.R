@@ -1,3 +1,6 @@
+install.packages("R.utils")
+require(R.utils)
+
 
 #### downloading files ####
 
@@ -38,6 +41,5 @@ rownames(dane) <- NULL
 write.csv2(dane, file=paste(temp_dir, "\\dane.csv", sep=""))
 
 
-#install.packages("R.utils")
-#require(R.utils)
+
 
