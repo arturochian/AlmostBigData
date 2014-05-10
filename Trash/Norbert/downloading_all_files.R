@@ -3,12 +3,13 @@ library(stringi)
 #First download:
 
 start <- as.Date('2012-10-01')
-today <- as.Date('2014-05-01')
+today <- as.Date('2014-05-10')
 all_days <- seq(start, today, by = 'day')
 year <- as.POSIXlt(all_days)$year + 1900
 urls <- paste0('http://cran-logs.rstudio.com/', year, '/', all_days, '.csv.gz')
 
 destdir <- "D:/BigData/"
+destdir <- "D:/bd1/AlmostBigData/cran-logs/"
 n <- length(urls)
 i=1
 for(i in 1:n){
