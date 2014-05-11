@@ -95,6 +95,7 @@ write.csv2(read.csv2(paste(gzpath[i],".csv"), sep=","), paste(gzpath[i],"_new.cs
 \chapter{SAS Path}
 \thispagestyle{fancy}
 Syntax used for importing, merging and summarizing data is available in chapter \ref{ch:sas}. 
+\section{Importing data}
 Importing \texttt{csv} files into \textbf{SAS} syntax looked like this and took:
 <<eval=FALSE>>=
 proc import datafile='D:/bd1/AlmostBigData/cran-logs2012-10-01 _new.csv'
@@ -111,6 +112,7 @@ out=CR.cran586 dbms=csv replace;
       getnames=yes; 
       run;
 @
+\section{Merging files}
 Merging all those files syntax looked like this and time expired was:
 <<eval=FALSE>>=
 data Cr.DANE;
@@ -121,32 +123,108 @@ CR.cran2,
 CR.cran586;
 run;
 @
+\section{Summary for each variable}
 Summaries of each variable syntax looked like this and time expired was:
 <<eval=FALSE>>=
-proc summary data=Cr.DANE print;
-class package;
-run;
+12   proc summary data=Cr.DANE2 print;
+13   class package;
+14   run;
 
-proc summary data=Cr.DANE print;
-class version;
-run;
+NOTE: There were 41611796 observations read from the data set CR.DANE2.
+NOTE: PROCEDURE SUMMARY used (Total process time):
+      real time           29.82 seconds
+      cpu time            20.06 seconds
 
-proc summary data=Cr.DANE print;
-class r_arch;
-run;
 
-proc summary data=Cr.DANE print;
-class r_os;
-run;
+15
+16   proc summary data=Cr.DANE2 print;
+17   class version;
+18   run;
 
-proc summary data=Cr.DANE print;
-class r_version;
-run;
+NOTE: There were 41611796 observations read from the data set CR.DANE2.
+NOTE: PROCEDURE SUMMARY used (Total process time):
+      real time           31.23 seconds
+      cpu time            20.18 seconds
 
-proc summary data=Cr.DANE print;
-class country;
-run;
+
+19
+20   proc summary data=Cr.DANE2 print;
+21   class r_arch;
+22   run;
+
+NOTE: There were 41611796 observations read from the data set CR.DANE2.
+NOTE: PROCEDURE SUMMARY used (Total process time):
+      real time           30.65 seconds
+      cpu time            10.12 seconds
+
+
+23
+24   proc summary data=Cr.DANE2 print;
+25   class r_os;
+26   run;
+
+NOTE: There were 41611796 observations read from the data set CR.DANE2.
+NOTE: PROCEDURE SUMMARY used (Total process time):
+      real time           30.59 seconds
+      cpu time            12.58 seconds
+
+
+27
+28   proc summary data=Cr.DANE2 print;
+29   class r_version;
+30   run;
+
+NOTE: There were 41611796 observations read from the data set CR.DANE2.
+NOTE: PROCEDURE SUMMARY used (Total process time):
+      real time           30.56 seconds
+      cpu time            10.95 seconds
+
+
+31
+32   proc summary data=Cr.DANE2 print;
+33   class country;
+34   run;
+
+NOTE: There were 41611796 observations read from the data set CR.DANE2.
+NOTE: PROCEDURE SUMMARY used (Total process time):
+      real time           30.07 seconds
+      cpu time            12.48 seconds
+
+
 @
+\section{Frequency tables}
+\subsection{r os}
+Frequency tables syntax and the time expired for \texttt{r os}:
+<<eval=FALSE>>=
+    proc freq data=Cr.dane2;
+    tables r_os;
+    run;
+
+NOTE: Writing HTML Body file: sashtml.htm
+NOTE: There were 41611796 observations read from the data set CR.DANE2.
+NOTE: PROCEDURE FREQ used (Total process time):
+      real time           32.60 seconds
+      cpu time            5.46 seconds
+
+@
+\subsection{Packages}
+Frequency tables syntax and the time expired for \texttt{packages}, grouped by \texttt{r os}:
+<<eval=FALSE>>=
+   proc freq data=Cr.dane2 page;
+   by r_os;
+   tables package;
+   run;
+
+NOTE: There were 41611796 observations read from the data set CR.DANE2.
+NOTE: PROCEDURE FREQ used (Total process time):
+      real time           53.25 seconds
+      cpu time            32.46 seconds
+
+@
+
+
+
+
 
 
 \chapter{Traditional $\mathcal{R}$ Path}
@@ -238,6 +316,17 @@ proc summary data=Cr.DANE print;
 class country;
 run;
 
+
+
+proc freq data=Cr.dane2 page;
+tables r_os;
+run;
+
+
+proc freq data=Cr.dane2 page;
+by r_os;
+tables package;
+run;
 @
 
 
