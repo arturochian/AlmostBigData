@@ -19,16 +19,17 @@
             citecolor=blue,
             urlcolor=blue}
 \title{\textbf{\LARGE{Cran download logs aggregation time summary} }}
-\fancyhead[RO,LE]{\bfseries \small{A.Birek, M.Kosiñski, N.Ryciak, W.Ryciuk}}
+\fancyhead[RO,LE]{\bfseries \small{A.Birek, M.Kosi?ski, N.Ryciak, W.Ryciuk}}
 \fancyhead[RE,LO]{\bfseries \small{Cran download logs summary}}
 
 
 
 
 
-\author{A.Birek, M.Kosiñski, N.Ryciak, W.Ryciuk}
+\author{A.Birek, M.Kosi?ski, N.Ryciak, W.Ryciuk}
 
 \begin{document}
+\SweaveOpts{concordance=TRUE}
 
 
 <<echo=FALSE>>=
@@ -50,6 +51,7 @@ Syntax used for downloading, unzipping and merging data is available in section 
 <<echo=FALSE>>=
 library(stringi)
 @
+
 
 <<eval=FALSE>>=
 start <- as.Date('2012-10-01')
@@ -253,6 +255,114 @@ NOTE: PROCEDURE FREQ used (Total process time):
 \thispagestyle{fancy}
 \section{Unmerged $\mathcal{R}$ files Path}
 \section{Merged $\mathcal{R}$ files Path}
+Merging all filles with R looked like this: 
+<<eval=FALSE>>=
+start <- as.Date('2012-10-01')
+today <- as.Date('2014-05-09')
+
+all_days <- seq(start, today, by = 'day')
+
+temp_dir <- "~//BigData"
+filenames <- paste0(temp_dir,"/", all_days, '_newf.csv')
+for (i in 1:length(filenames)) {
+dane<-read.csv2(filenames[i])
+dane<-dane[c(-1)]
+
+write.table(dane,file=paste(temp_dir, "/dane.csv", sep=""),append=TRUE,dec=",",sep=';',qmethod='double',col.names=FALSE,row.names=FALSE)
+}
+@
+It took around 25 mins.
+\subsection{Names}
+Getting all packages names, architectures kinds and operating system names was done in around 15 min using the following code: 
+<<eval=FALSE>>=
+options(stringsAsFactors = FALSE)
+temp_dir<-destdir <- "~//BigData"
+fname<-paste(temp_dir, "/dane.csv", sep="")
+
+nazwy<-vector("character")
+
+skipy<-0
+nrowsy<-2000000
+nazwy<-character(0)
+arch<-character(0)
+r_os<-character(0)
+
+ileLinijek<-0
+
+   while(class(
+      try({d<-read.csv2(fname,skip=skipy,nrows=nrowsy)},silent=TRUE)
+   )
+   !="try-error"  )
+   { 
+       nazwy<-union(d[,7],nazwy)
+         arch<-union(d[,5],arch)
+         r_os<-union(d[,6],r_os)
+      ileLinijek<-ileLinijek+length(d[,1])
+      skipy<-skipy+nrowsy
+   }
+   
+
+nazwy<-na.omit(nazwy)
+arch<-na.omit(arch)
+r_os<-na.omit(r_os)
+n<-length(nazwy)
+a<-length(arch)
+r<-length(r_os)
+a_r<-data.frame(matrix(0,nrow=a,ncol=r))
+rownames(a_r)<-arch
+names(a_r)<-r_os
+
+
+pakiety<-data.frame(rep( 0 ,length.out=n),row.names=nazwy)
+names(pakiety)<-"Krotnosci"
+@
+
+\subsection{Getting Data}
+To get required data we used the following code: 
+<<eval=FALSE>>=
+skipy<-0
+nrowsy<-2000000
+while(class(
+   try({d<-read.csv2(fname,skip=skipy,nrows=nrowsy)},silent=TRUE)
+)
+!="try-error"  )
+{       
+         for (j in 1:length(d[,1]) )
+               {if (!is.na(d[j,7]))pakiety[(d[j,7]),]<-pakiety[(d[j,7]),]+1}
+               
+         
+        skipy<-skipy+nrowsy
+      }
+@
+
+<<eval=FALSE>>=
+skipy<-0
+nrowsy<-2000000
+while(class(
+   try({d<-read.csv2(fname,skip=skipy,nrows=nrowsy)},silent=TRUE)
+)
+!="try-error"  )
+{ 
+         un<-unique(d[,10])
+         un<-na.omit(un)
+         for (i in 1:length(un))
+         {
+            s<-(d[d[,10]==un[i],][1,])
+            aa<-s[1,6]
+            rr<-s[1,5]
+            if (!is.na(aa) & !is.na(rr))a_r[rr,aa]<-a_r[rr,aa]+1
+         }
+
+             skipy<-skipy+nrowsy
+      }
+@
+
+First took around 2 hours, and second .
+
+
+
+
+
 \chapter{Rcpp Path}
 \thispagestyle{fancy}
 \appendix

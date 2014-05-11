@@ -10,7 +10,9 @@
 \contentsline {chapter}{\numberline {3}Traditional $\mathcal {R}$ Path}{7}{chapter.3}
 \contentsline {section}{\numberline {3.1}Unmerged $\mathcal {R}$ files Path}{7}{section.3.1}
 \contentsline {section}{\numberline {3.2}Merged $\mathcal {R}$ files Path}{7}{section.3.2}
-\contentsline {chapter}{\numberline {4}Rcpp Path}{8}{chapter.4}
-\contentsline {chapter}{\numberline {A}Preparing report}{9}{appendix.A}
-\contentsline {section}{\numberline {A.1}Data download, unzipp, conversion syntax}{9}{section.A.1}
-\contentsline {chapter}{\numberline {B}SAS Syntax}{10}{appendix.B}
+\contentsline {subsection}{\numberline {3.2.1}Names}{7}{subsection.3.2.1}
+\contentsline {subsection}{\numberline {3.2.2}Getting Data}{8}{subsection.3.2.2}
+\contentsline {chapter}{\numberline {4}Rcpp Path}{9}{chapter.4}
+\contentsline {chapter}{\numberline {A}Preparing report}{10}{appendix.A}
+\contentsline {section}{\numberline {A.1}Data download, unzipp, conversion syntax}{10}{section.A.1}
+\contentsline {chapter}{\numberline {B}SAS Syntax}{11}{appendix.B}
