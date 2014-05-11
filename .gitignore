@@ -17,30 +17,21 @@
 *.synctex.gz
 
 
+# Data sets and some trashy-files
 .csv
-
 .txt
-
 .sas7bdat
-
 .csv.gz
-
 .gz
-
 DANE.sas
-
-
+.toc
 
 
 
 *.csv
-
 *.txt
-
 *.sas7bdat
-
 *.csv.gz
-
 *.gz
-
 *DANE.sas
+*.toc
