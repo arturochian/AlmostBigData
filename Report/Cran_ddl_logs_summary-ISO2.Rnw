@@ -112,6 +112,7 @@ out=CR.cran586 dbms=csv replace;
       getnames=yes; 
       run;
 @
+
 \section{Merging files}
 Merging all those files syntax looked like this and time expired was:
 <<eval=FALSE>>=
@@ -123,6 +124,12 @@ CR.cran2,
 CR.cran586;
 run;
 @
+Time expired:
+\begin{figure}[h!]
+\begin{center}
+\includegraphics[height=2cm]{sas.jpg}
+\end{center}
+\end{figure}
 \section{Summary for each variable}
 Summaries of each variable syntax looked like this and time expired was:
 <<eval=FALSE>>=
@@ -192,6 +199,21 @@ NOTE: PROCEDURE SUMMARY used (Total process time):
 
 
 @
+\section{Sorting}
+Sort procedure is required that frequency table can be computed. Unfortunately it takes over 3 minutes...
+<<eval=FALSE>>=
+1    proc sort data=Cr.Dane out=CR.Dane2;
+2    by r_os;
+3    run;
+
+NOTE: There were 41611796 observations read from the data set CR.DANE.
+NOTE: The data set CR.DANE2 has 41611796 observations and 11 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           3:49.71
+      cpu time            35.39 seconds
+
+@
+
 \section{Frequency tables}
 \subsection{r os}
 Frequency tables syntax and the time expired for \texttt{r os}:
@@ -316,7 +338,9 @@ proc summary data=Cr.DANE print;
 class country;
 run;
 
-
+proc sort data=Cr.Dane out=CR.Dane2;
+by r_os;
+run;
 
 proc freq data=Cr.dane2 page;
 tables r_os;
