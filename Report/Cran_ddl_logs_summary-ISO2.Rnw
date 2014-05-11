@@ -96,7 +96,7 @@ write.csv2(read.csv2(paste(gzpath[i],".csv"), sep=","), paste(gzpath[i],"_new.cs
 \thispagestyle{fancy}
 Syntax used for importing, merging and summarizing data is available in chapter \ref{ch:sas}. 
 \section{Importing data}
-Importing \texttt{csv} files into \textbf{SAS} syntax looked like this and took:
+Importing \texttt{csv} files into \textbf{SAS} syntax looked like this and took: average 0.2 s for each file, that gives \textbf{2 min 40 S} (Stoper method.)
 <<eval=FALSE>>=
 proc import datafile='D:/bd1/AlmostBigData/cran-logs2012-10-01 _new.csv'
 out=CR.cran1 dbms=csv replace;
