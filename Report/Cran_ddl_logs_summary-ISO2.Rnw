@@ -1,0 +1,245 @@
+\documentclass[a4paper,openany]{book}
+%%%%%%%%%%%%%%%%%%% POLSKIE ZNAKI &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+%\usepackage{polski}
+\usepackage[T1]{fontenc}
+\usepackage[latin2]{inputenc} 
+\usepackage[top=1.5cm, bottom=1.5cm, left=0.95cm, right=0.95cm]{geometry}
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\usepackage[Bjarne]{fncychap}
+\usepackage{rotating}
+\usepackage{pdflscape}
+\usepackage{amsfonts}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{hyperref} %pakiet do dodawania hiper??cz
+\hypersetup{colorlinks=true,
+            linkcolor=blue,
+            citecolor=blue,
+            urlcolor=blue}
+\title{\textbf{\LARGE{Cran download logs aggregation time summary} }}
+\fancyhead[RO,LE]{\bfseries \small{A.Birek, M.Kosiñski, N.Ryciak, W.Ryciuk}}
+\fancyhead[RE,LO]{\bfseries \small{Cran download logs summary}}
+
+
+
+
+
+\author{A.Birek, M.Kosiñski, N.Ryciak, W.Ryciuk}
+
+\begin{document}
+
+
+<<echo=FALSE>>=
+opts_chunk$set(comment="", message=FALSE,fig.width=8, fig.height=6,tidy.opts=list(keep.blank.line=TRUE, width.cutoff=90))
+@
+\maketitle
+\thispagestyle{fancy}
+\tableofcontents
+\begin{figure}[h!]
+\begin{center}
+\includegraphics[height=6cm]{github.png}
+\end{center}
+\caption{Powered by ! \href{https://github.com/MarcinKosinski/AlmostBigData}{https://github.com/MarcinKosinski/AlmostBigData}}
+\end{figure}
+\newpage
+\chapter{Downloading data}
+\thispagestyle{fancy}
+Syntax used for downloading, unzipping and merging data is available in section \ref{ch:ddl}. More or less downloading looked like this and took about:
+<<echo=FALSE>>=
+library(stringi)
+@
+
+<<eval=FALSE>>=
+start <- as.Date('2012-10-01')
+today <- as.Date('2014-05-10')
+all_days <- seq(start, today, by = 'day')
+year <- as.POSIXlt(all_days)$year + 1900
+urls <- paste0('http://cran-logs.rstudio.com/', year, '/', all_days, '.csv.gz')
+
+destdir <- "D:/bd1/AlmostBigData/cran-logs/"
+n <- length(urls)
+i=1
+for(i in 1:n){
+   destfile <- stri_paste(destdir,as.character(all_days[i]))
+   download.file(urls[i],destfile)
+}
+@
+
+
+Unzipping files syntax looked like this and took:
+<<eval=FALSE>>=
+lok <- "D:/bd1/AlmostBigData"
+gzpath <- character(n)
+i <-1
+for (i in 1:n){
+   gzpath[i] <- paste(lok, "/cran-logs", all_days[i], sep="")
+}
+install.packages("R.utils")
+library(R.utils)
+for (i in 1:n){
+   gunzip(gzpath[i], destname=paste(gzpath[i],".csv"),remove=TRUE)
+}
+@
+
+Converting CSV files with proper delimiter syntax looked like this and time spent was:
+<<eval=FALSE>>=
+for (i in 1:n){
+write.csv2(read.csv2(paste(gzpath[i],".csv"), sep=","), paste(gzpath[i],"_new.csv"))
+}
+@
+
+
+
+\chapter{SAS Path}
+\thispagestyle{fancy}
+Syntax used for importing, merging and summarizing data is available in chapter \ref{ch:sas}. 
+Importing \texttt{csv} files into \textbf{SAS} syntax looked like this and took:
+<<eval=FALSE>>=
+proc import datafile='D:/bd1/AlmostBigData/cran-logs2012-10-01 _new.csv'
+out=CR.cran1 dbms=csv replace;
+      delimiter = ';';
+      getnames=yes; 
+      run;
+
+...
+
+proc import datafile='D:/bd1/AlmostBigData/cran-logs2014-05-09 _new.csv'
+out=CR.cran586 dbms=csv replace;
+      delimiter = ';';
+      getnames=yes; 
+      run;
+@
+Merging all those files syntax looked like this and time expired was:
+<<eval=FALSE>>=
+data Cr.DANE;
+set
+CR.cran1,
+CR.cran2,
+....
+CR.cran586;
+run;
+@
+Summaries of each variable syntax looked like this and time expired was:
+<<eval=FALSE>>=
+proc summary data=Cr.DANE print;
+class package;
+run;
+
+proc summary data=Cr.DANE print;
+class version;
+run;
+
+proc summary data=Cr.DANE print;
+class r_arch;
+run;
+
+proc summary data=Cr.DANE print;
+class r_os;
+run;
+
+proc summary data=Cr.DANE print;
+class r_version;
+run;
+
+proc summary data=Cr.DANE print;
+class country;
+run;
+@
+
+
+\chapter{Traditional $\mathcal{R}$ Path}
+\thispagestyle{fancy}
+\section{Unmerged $\mathcal{R}$ files Path}
+\section{Merged $\mathcal{R}$ files Path}
+\chapter{Rcpp Path}
+\thispagestyle{fancy}
+\appendix
+\chapter{Preparing report}
+\section{Data download, unzipp, conversion syntax}\label{ch:ddl}
+\thispagestyle{fancy}
+<<eval=FALSE>>=
+start <- as.Date('2012-10-01')
+today <- as.Date('2014-05-10')
+all_days <- seq(start, today, by = 'day')
+year <- as.POSIXlt(all_days)$year + 1900
+urls <- paste0('http://cran-logs.rstudio.com/', year, '/', all_days, '.csv.gz')
+
+destdir <- "D:/bd1/AlmostBigData/cran-logs/"
+n <- length(urls)
+i=1
+for(i in 1:n){
+   destfile <- stri_paste(destdir,as.character(all_days[i]))
+   download.file(urls[i],destfile)
+}
+
+lok <- "D:/bd1/AlmostBigData"
+gzpath <- character(n)
+i <-1
+for (i in 1:n){
+   gzpath[i] <- paste(lok, "/cran-logs", all_days[i], sep="")
+}
+install.packages("R.utils")
+library(R.utils)
+for (i in 1:n){
+   gunzip(gzpath[i], destname=paste(gzpath[i],".csv"),remove=TRUE)
+}
+
+for (i in 1:n){
+write.csv2(read.csv2(paste(gzpath[i],".csv"), sep=","), paste(gzpath[i],"_new.csv"))
+}
+@
+\chapter{SAS Syntax}\label{ch:sas}
+<<eval=FALSE>>=
+proc import datafile='D:/bd1/AlmostBigData/cran-logs2012-10-01 _new.csv'
+out=CR.cran1 dbms=csv replace;
+      delimiter = ';';
+      getnames=yes; 
+      run;
+
+...
+
+proc import datafile='D:/bd1/AlmostBigData/cran-logs2014-05-09 _new.csv'
+out=CR.cran586 dbms=csv replace;
+      delimiter = ';';
+      getnames=yes; 
+      run;
+
+data Cr.DANE;
+set
+CR.cran1,
+CR.cran2,
+....
+CR.cran586;
+run;
+
+proc summary data=Cr.DANE print;
+class package;
+run;
+
+proc summary data=Cr.DANE print;
+class version;
+run;
+
+proc summary data=Cr.DANE print;
+class r_arch;
+run;
+
+proc summary data=Cr.DANE print;
+class r_os;
+run;
+
+proc summary data=Cr.DANE print;
+class r_version;
+run;
+
+proc summary data=Cr.DANE print;
+class country;
+run;
+
+@
+
+
+
+\end{document}
