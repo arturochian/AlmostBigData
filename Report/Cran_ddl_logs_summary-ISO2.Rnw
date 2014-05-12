@@ -31,6 +31,7 @@
 \begin{document}
 
 
+
 <<echo=FALSE>>=
 opts_chunk$set(comment="", message=FALSE,fig.width=8, fig.height=6,tidy.opts=list(keep.blank.line=TRUE, width.cutoff=90))
 @
@@ -253,6 +254,113 @@ NOTE: PROCEDURE FREQ used (Total process time):
 \chapter{Traditional $\mathcal{R}$ Path}
 \thispagestyle{fancy}
 \section{Unmerged $\mathcal{R}$ files Path}
+
+This is processing file by file syntax. Total time of processing was 11,5 hours.  Time spent on counting number of downloads packages and counting number of unique users for each day (sum of times of inner loop processing) was 11,38 hours. It means that creating other statistics and margin time was about 12 minutes.
+<<eval=FALSE>>=
+# Data frame for statistics
+# one row <-> one file
+summary <- data.frame("date"=0,"number_of_different_packages"=0,
+                      "number_of_different_id"=0,"size"=0,"processing_time"=0,
+                      "windows"=0,"linux"=0,"mac"=0)
+filelist.csv <- list.files(destdir,pattern="u$",full.names=TRUE)
+# Creating empty list for counting downloads of each package
+statistics<-list()
+
+numberofpackages<-0
+k <- 1
+start<-Sys.time()
+for(f in filelist.csv){
+  
+  starttime <- Sys.time()
+  
+  t <- read.table(f,h=TRUE,sep=",")
+  systems <- c("m"=0,"l"=0,"d"=0)
+  n <- nrow(t)
+  number_of_different_packages <- 0
+  number_of_different_id <- 0
+  for(i in 1:n){
+    pi <- as.character(t[i,7])
+    if(!is.na(pi)){
+      if(is.null(statistics[[pi]])){
+        numberofpackages <- numberofpackages+1
+        statistics[numberofpackages]<-1
+        names(statistics)[numberofpackages] <- pi
+        
+      } else {
+        statistics[pi] <- statistics[[pi]]+1
+      }
+    }
+    if(!is.na(t[i,10])){
+      if(t[i,10]>number_of_different_id){
+        sys <- stri_sub(t[i,6],1,1)
+        if(!is.na(sys)){
+          systems[sys] <- systems[sys] + 1
+          number_of_different_id <- t[i,10]
+        }
+      }
+    }
+  }
+  endtime <- Sys.time()
+  
+  summary[k,1] <- stri_sub(basename(f),1,stri_length(basename(f))-1)
+  summary[k,2] <- numberofpackages
+  summary[k,3] <- number_of_different_id
+  summary[k,4] <- floor(file.info(f)$size/1000)
+  summary[k,5] <- endtime-starttime
+  summary[k,6] <- systems[1]
+  summary[k,7] <- systems[2]
+  summary[k,8] <- systems[3]
+  cat(k," ",summary[k,5],"\n")
+  k <- k+1
+}
+end <- Sys.time()
+@
+
+Here are some plots presenting shaping statistics in time.
+
+<<echo=FALSE,fig.height=5>>=
+summary<-read.table("H:/Windows7/Documents/summary.txt",sep =";",h=TRUE)
+czasy100_ <- summary[-(1:100),5]
+czasy100_[czasy100_<6] <- czasy100_[czasy100_<6]*60
+czasy <- c(summary[1:100,5],czasy100_)
+#sum(czasy)/3600 # Sum of processing times: 11,38 h
+require(graphics)
+
+t <- seq(ISOdatetime(2012,10,1,0,0,0), ISOdatetime(2014,05,8,0,0,0), "days")[-(450:458)]
+plot(t, summary[,2], xaxt='n',type="l",xlab="date",ylab="paskages",main="Number of packages")
+axis(1, at=as.POSIXct(unique(format(t, '%Y-%m-%d')), format='%Y-%m-%d'),
+     labels=unique(format(t, '%Y-%m-%d')),tick=FALSE)
+
+plot(t, summary[,3], xaxt='n',type="l",xlab="date",ylab="users",main="Number of users")
+axis(1, at=as.POSIXct(unique(format(t, '%Y-%m-%d')), format='%Y-%m-%d'),
+     labels=unique(format(t, '%Y-%m-%d')),tick=FALSE)
+
+plot(t, summary[,4], xaxt='n',type="l",xlab="date",ylab="file size",main="Size of files")
+axis(1, at=as.POSIXct(unique(format(t, '%Y-%m-%d')), format='%Y-%m-%d'),
+     labels=unique(format(t, '%Y-%m-%d')),tick=FALSE)
+@
+
+Speed of data processing time was 77 kB/s. We estimated this fitting linear model to the last plot. Ohter way to estimate this time is dividing sum of size of files by sum of processing times. Then we get 85 kB/s.
+
+<<echo=FALSE,fig.height=5>>=
+plot(summary[,4],czasy,xlab="siez [kB]",ylab="time [s]",main="Processing time")
+@
+
+<<eval=FALSE,echo=FALSE,results='hide'>>=
+lm(czasy~summary[,4])$coef[2] # - slope coefficient. It means speed = 1/0,013 = 77 kB/s
+sum(summary[,4])/sum(czasy)
+@
+
+Percentage of operating systems: windows - 68\%, linux - 15\%, mac os - 16\%
+<<echo=FALSE,fig.height=4,fig.width=4,fig.align='center'>>=
+#c(sum(summary[,6]),sum(summary[,7]),sum(summary[,8]))/sum(summary[,6:8])
+pie(c(sum(summary[,6]),sum(summary[,7]),sum(summary[,8])),labels=names(summary)[6:8])
+# windows: 68%, linux: 15%, mac os: 16%
+@
+
+
+
+
 \section{Merged $\mathcal{R}$ files Path}
 Merging all filles with R looked like this: 
 <<eval=FALSE>>=
@@ -462,6 +570,13 @@ tables package;
 run;
 @
 
+\chapter{Summary statistics for days}\label{ch:sum}
+
+<<echo=FALSE>>=
+summary<-read.table("H:/Windows7/Documents/summary.txt",sep =";",h=TRUE)
+names(summary) <- c("date","packages","users", "size","processing_time","windows","linux","mac")
+summary
+@
 
 
 \end{document}
