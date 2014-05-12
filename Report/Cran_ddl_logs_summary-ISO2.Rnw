@@ -26,7 +26,7 @@
 
 
 
-\author{A.Birek, M.Kosinski, N.Ryciak, W.Ryciuk}
+\author{A.Birek, M.Kosiñski, N.Ryciak, W.Ryciuk}
 
 \begin{document}
 
