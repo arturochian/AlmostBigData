@@ -356,7 +356,7 @@ while(class(
       }
 @
 
-First took around 2 hours, and second .
+First took around 2 hours, and second 3 hours.
 
 
 

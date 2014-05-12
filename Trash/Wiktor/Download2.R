@@ -103,7 +103,7 @@ t2-t1
 
 t1<-Sys.time()
 skipy<-0
-nrowsy<-2000000
+nrowsy<-20000
 #krotnosci
 while(class(
    try({d<-read.csv2(fname,skip=skipy,nrows=nrowsy)},silent=TRUE)
