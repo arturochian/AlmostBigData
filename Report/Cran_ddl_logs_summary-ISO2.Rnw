@@ -19,17 +19,16 @@
             citecolor=blue,
             urlcolor=blue}
 \title{\textbf{\LARGE{Cran download logs aggregation time summary} }}
-\fancyhead[RO,LE]{\bfseries \small{A.Birek, M.Kosi?ski, N.Ryciak, W.Ryciuk}}
+\fancyhead[RO,LE]{\bfseries \small{A.Birek, M.Kosinski, N.Ryciak, W.Ryciuk}}
 \fancyhead[RE,LO]{\bfseries \small{Cran download logs summary}}
 
 
 
 
 
-\author{A.Birek, M.Kosi?ski, N.Ryciak, W.Ryciuk}
+\author{A.Birek, M.Kosinski, N.Ryciak, W.Ryciuk}
 
 \begin{document}
-\SweaveOpts{concordance=TRUE}
 
 
 <<echo=FALSE>>=
