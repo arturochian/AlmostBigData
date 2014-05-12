@@ -46,7 +46,7 @@ opts_chunk$set(comment="", message=FALSE,fig.width=8, fig.height=6,tidy.opts=lis
 \newpage
 \chapter{Downloading data}
 \thispagestyle{fancy}
-Syntax used for downloading, unzipping and merging data is available in section \ref{ch:ddl}. More or less downloading looked like this and took about:
+Syntax used for downloading, unzipping and merging data is available in section \ref{ch:ddl}. More or less downloading looked like this and took about: 1783.13 s 
 <<echo=FALSE>>=
 library(stringi)
 @

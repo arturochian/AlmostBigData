@@ -1,14 +1,16 @@
+##odtad:
+
 
 #First download:
-
+system.time({
+   require(stringi)
 start <- as.Date('2012-10-01')
 today <- as.Date('2014-05-10')
 all_days <- seq(start, today, by = 'day')
 year <- as.POSIXlt(all_days)$year + 1900
 urls <- paste0('http://cran-logs.rstudio.com/', year, '/', all_days, '.csv.gz')
 
-destdir <- "D:/BigData/"
-destdir <- "D:/bd1/AlmostBigData/cran-logs/"
+destdir <- "D:/BD/"
 n <- length(urls)
 i=1
 for(i in 1:n){
@@ -20,36 +22,28 @@ for(i in 1:n){
 ###################################
 ###################################
 
-lok <- "D:/bd1/AlmostBigData"
+lok <- "D:/BD/"
 gzpath <- character(n)
 i <-1
 for (i in 1:n){
    gzpath[i] <- paste(lok, "/cran-logs", all_days[i], sep="")
 }
-install.packages("R.utils")
+
 library(R.utils)
 for (i in 1:n){
    gunzip(gzpath[i], destname=paste(gzpath[i],".csv"),remove=TRUE)
 }
-?gunzip
+
 
 
 for (i in 1:n){
 write.csv2(read.csv2(paste(gzpath[i],".csv"), sep=","), paste(gzpath[i],"_new.csv"))
 }
+})
+##dotad
 
-### hoho ho ahtung !
 
-#filenames <- paste0(lok,"/cran-logs", all_days, " _new.csv")
-#filenames <- filenames[-587]
-#dane <- do.call("rbind", lapply(filenames, read.csv2, header = TRUE))
-#dane <- dane[,-1]
-#rownames(dane) <- NULL 
-#write.csv2(dane, file=paste(temp_dir, "\dane.csv", sep=""))
-
-##
-
-lok2 <- "D:/bd1/AlmostBigData"
+lok2 <- "D:/BD/"
 
 filenames <- paste0(lok2,"/cran-logs", all_days, " _new.csv")
 filenames <- filenames[-587]
