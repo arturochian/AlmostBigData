@@ -1,3 +1,94 @@
+\documentclass[a4paper,openany]{book}
+%%%%%%%%%%%%%%%%%%% POLSKIE ZNAKI &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+%\usepackage{polski}
+\usepackage[T1]{fontenc}
+\usepackage[latin2]{inputenc} 
+\usepackage[top=1.5cm, bottom=1.5cm, left=0.95cm, right=0.95cm]{geometry}
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\usepackage[Bjarne]{fncychap}
+\usepackage{rotating}
+\usepackage{pdflscape}
+\usepackage{amsfonts}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{hyperref} %pakiet do dodawania hiper??cz
+\hypersetup{colorlinks=true,
+            linkcolor=blue,
+            citecolor=blue,
+            urlcolor=blue}
+\title{\textbf{\LARGE{Cran download logs aggregation time summary} }}
+\fancyhead[RO,LE]{\bfseries \small{A.Birek, M.Kosinski, N.Ryciak, W.Ryciuk}}
+\fancyhead[RE,LO]{\bfseries \small{Cran download logs summary}}
+
+
+
+
+
+\begin{document}
+
+<<echo=FALSE>>=
+opts_chunk$set(comment="", message=FALSE,fig.width=8, fig.height=6,tidy.opts=list(keep.blank.line=TRUE, width.cutoff=90))
+@
+
+
+
+
+%\maketitle
+\thispagestyle{fancy}
+
+\newpage
+
+
+
+\chapter{Rcpp Path}
+
+\section{Importing data}
+Finding \texttt{csv} files names (paths) using \textbf{R} syntax looked like this and took approximately 0.2 s.
+
+<<eval=FALSE>>=
+system.time({
+names <- list.files("D:/Artur/AlmostBigData/", full.names = T, recursive=TRUE)
+})
+@
+
+
+\section{Merging files}
+Files were not merged into one file. They were being opened one by one in program.
+
+
+\section{Frequency tables}
+Syntax used for counting is available in section \ref{ch:rcpp}
+
+\subsection{r os}
+Frequency tables syntax and the time expired for \texttt{r os}:
+<<eval=FALSE>>=
+system.time({
+wynik <- CountDownloads(names, "r_os")
+})
+
+user     system    time
+167.08   38.00     207.65
+@
+
+\noindent which is 2 min. 48 s.
+
+\subsection{Packages}
+Frequency tables syntax and the time expired for \texttt{packages}:
+<<eval=FALSE>>=
+system.time({
+wynik <- CountDownloads(names, "package")
+})
+
+user     system    time
+212.10   40.25     255.82
+@
+
+\noindent which is 3 min. 32 s.
+
+\chapter{Rcpp Syntax}\label{ch:rcpp}
+<<eval=FALSE>>=
 #include <Rcpp.h>
 #include <iostream>
 #include <string>
@@ -91,4 +182,6 @@ List CountDownloads(CharacterVector paths, CharacterVector colname)
    
 }
 
+@
 
+\end{document}
